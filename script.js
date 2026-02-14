@@ -8,84 +8,84 @@ const CONFIG = {
 
 const screens = ["s1", "s2", "s3", "s4"];
 const state = {
-  plan: { title: "COMIDA", desc: "comer algo rico juntos 🍔" },
-  place: { title: "AFUERA", desc: "afuera" },
+  plan: { title: "COMIDA", desc: "Comer algo rico juntos" },
+  place: { title: "AFUERA", desc: "Afuera" },
 };
 
 function show(id){
-  screens.forEach(s => document.getElementById(s).classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+  screens.forEach(s => document.getElementById(s)?.classList.remove("active"));
+  document.getElementById(id)?.classList.add("active");
 }
 
 function updateFinal(){
-  document.getElementById("dateText").textContent = CONFIG.fecha;
-  document.getElementById("timeText").textContent = CONFIG.hora;
-  document.getElementById("signatureText").textContent = CONFIG.firma;
+  const dateEl = document.getElementById("dateText");
+  const timeEl = document.getElementById("timeText");
+  const signEl = document.getElementById("signatureText");
+  const sumEl  = document.getElementById("summaryText");
 
-  const summary = `Tenemos una cita <b>${state.place.desc}</b> a las <b>${CONFIG.hora}</b> para <b>${state.plan.desc}</b>.`;
-  document.getElementById("summaryText").innerHTML = summary;
+  if (dateEl) dateEl.textContent = CONFIG.fecha;
+  if (timeEl) timeEl.textContent = CONFIG.hora;
+  if (signEl) signEl.textContent = CONFIG.firma;
+
+  if (sumEl){
+    sumEl.innerHTML = `Tenemos una cita <b>${state.place.desc}</b> a las <b>${CONFIG.hora}</b> para <b>${state.plan.desc}</b>.`;
+  }
 }
 
 function randomInt(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Botón NO que se mueve
-const noZone = document.getElementById("noZone");
-const btnNo1  = document.getElementById("btnNo1");
+// --- Botón NO que se mueve (siempre seguro) ---
+function setupNoButton(){
+  const noZone = document.getElementById("noZone");
+  const btnNo1 = document.getElementById("btnNo1");
+  if (!noZone || !btnNo1) return;
 
-function dodgeNo(){
-  const zone = noZone.getBoundingClientRect();
-  const btn  = btnNo1.getBoundingClientRect();
+  function dodgeNo(){
+    const zone = noZone.getBoundingClientRect();
+    const btn  = btnNo1.getBoundingClientRect();
 
-  const maxX = zone.width - btn.width;
-  const maxY = zone.height - btn.height;
+    const maxX = zone.width - btn.width;
+    const maxY = zone.height - btn.height;
 
-  const x = randomInt(0, Math.max(0, Math.floor(maxX)));
-  const y = randomInt(0, Math.max(0, Math.floor(maxY)));
+    const x = randomInt(0, Math.max(0, Math.floor(maxX)));
+    const y = randomInt(0, Math.max(0, Math.floor(maxY)));
 
-  btnNo1.style.position = "absolute";
-  btnNo1.style.left = `${x}px`;
-  btnNo1.style.top  = `${y}px`;
+    btnNo1.style.position = "absolute";
+    btnNo1.style.left = `${x}px`;
+    btnNo1.style.top  = `${y}px`;
+  }
+
+  btnNo1.addEventListener("mouseenter", dodgeNo);
+  btnNo1.addEventListener("touchstart", (e) => { e.preventDefault(); dodgeNo(); }, {passive:false});
+  btnNo1.addEventListener("click", dodgeNo);
 }
 
-// en celular: touchstart ayuda a que se mueva al tocar
-btnNo1.addEventListener("mouseenter", dodgeNo);
-btnNo1.addEventListener("touchstart", (e) => { e.preventDefault(); dodgeNo(); }, {passive:false});
-btnNo1.addEventListener("click", dodgeNo);
+function setupYesButton(){
+  const yes = document.getElementById("btnYes1");
+  if (!yes) return;
+  yes.addEventListener("click", () => show("s2"));
+}
 
-// Sí de la primera pantalla
-document.getElementById("btnYes1").addEventListener("click", () => show("s2"));
+function setupRestartCopy(){
+  const restart = document.getElementById("btnRestart");
+  const copy    = document.getElementById("btnCopy");
+  const msg     = document.getElementById("copiedMsg");
 
-// Botones de elección
-document.querySelectorAll(".pick").forEach(btn => {
-  btn.addEventListener("click", () => {
-    if (btn.dataset.plan){
-      state.plan.title = btn.dataset.plan;
-      state.plan.desc  = btn.dataset.planDesc;
-    }
-    if (btn.dataset.place){
-      state.place.title = btn.dataset.place;
-      state.place.desc  = btn.dataset.placeDesc.toLowerCase();
-    }
-    const next = btn.dataset.next;
-    if (next === "s4") updateFinal();
-    show(next);
-  });
-});
+  if (restart){
+    restart.addEventListener("click", () => {
+      state.plan = { title: "COMIDA", desc: "Comer algo rico juntos" };
+      state.place = { title: "AFUERA", desc: "Afuera" };
+      if (msg) msg.textContent = "";
+      show("s1");
+    });
+  }
 
-// Reiniciar
-document.getElementById("btnRestart").addEventListener("click", () => {
-  state.plan = { title: "COMIDA", desc: "comer algo rico juntos 🍔" };
-  state.place = { title: "AFUERA", desc: "afuera" };
-  document.getElementById("copiedMsg").textContent = "";
-  show("s1");
-});
-
-// Copiar texto para WhatsApp
-document.getElementById("btnCopy").addEventListener("click", async () => {
-  const url = window.location.href;
-  const text =
+  if (copy){
+    copy.addEventListener("click", async () => {
+      const url = window.location.href;
+      const text =
 `💘 Invitación 💘
 Fecha: ${CONFIG.fecha}
 Hora: ${CONFIG.hora}
@@ -94,13 +94,40 @@ Lugar: ${state.place.title}
 
 Abrí aquí: ${url}`;
 
-  try{
-    await navigator.clipboard.writeText(text);
-    document.getElementById("copiedMsg").textContent = "✅ Copiado. Pegalo en WhatsApp.";
-  }catch(e){
-    document.getElementById("copiedMsg").textContent = "No pude copiar automático. Copiá el link de la barra y mandalo por WhatsApp.";
+      try{
+        await navigator.clipboard.writeText(text);
+        if (msg) msg.textContent = "✅ Copiado. Pegalo en WhatsApp.";
+      }catch(e){
+        if (msg) msg.textContent = "No pude copiar automático. Copiá el link de la barra y mandalo por WhatsApp.";
+      }
+    });
   }
+}
+
+// ✅ EVENT DELEGATION: un solo listener para TODOS los .pick
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".pick");
+  if (!btn) return;
+
+  // Plan (Comida/Película)
+  if (btn.dataset.plan){
+    state.plan.title = btn.dataset.plan;
+    state.plan.desc  = btn.dataset.plandesc || btn.dataset.planDesc || state.plan.desc;
+  }
+
+  // Lugar (Afuera/En casa)
+  if (btn.dataset.place){
+    state.place.title = btn.dataset.place;
+    state.place.desc  = btn.dataset.placedesc || btn.dataset.placeDesc || state.place.desc;
+  }
+
+  const next = btn.dataset.next;
+  if (next === "s4") updateFinal();
+  if (next) show(next);
 });
 
-// Inicial
+// Inicialización
+setupNoButton();
+setupYesButton();
+setupRestartCopy();
 updateFinal();
