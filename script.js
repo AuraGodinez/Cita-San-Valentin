@@ -1,3 +1,5 @@
+alert("JS NUEVO CARGADO ✅ v3");
+
 // ====== Personaliza aquí ======
 const CONFIG = {
   fecha: "San Valentín 2026",   // ej: "14 de febrero 2026"
