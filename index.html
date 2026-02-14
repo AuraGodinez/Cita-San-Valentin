@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>💘 Invitación 💘</title>
+
+  <!-- Preview bonito en WhatsApp -->
+  <meta property="og:title" content="💘 ¿Querés ser mi cita? 💘">
+  <meta property="og:description" content="Solo hay una respuesta correcta 😌">
+  <meta property="og:type" content="website">
+  <!-- Puedes poner una imagen luego; por ahora WhatsApp mostrará título/descr -->
+  <!-- <meta property="og:image" content="https://tu-dominio/preview.jpg"> -->
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" id="card">
+
+      <!-- Pantalla 1 -->
+      <div class="screen active" id="s1">
+        <div class="heart">❤️</div>
+        <h1>¿Querés ser mi cita de San Valentín?</h1>
+        <p class="sub">Solo hay una respuesta correcta, mi amor…</p>
+
+        <div class="row row-center">
+          <button class="btn btn-yes" id="btnYes1">Sí 💘</button>
+
+          <div class="no-zone" id="noZone">
+            <button class="btn btn-no" id="btnNo1">NO</button>
+          </div>
+        </div>
+
+        <p class="hint">Tip: el botón NO… es tímido 😅</p>
+      </div>
+
+      <!-- Pantalla 2 -->
+      <div class="screen" id="s2">
+        <div class="heart">❤️</div>
+        <h1>¡Sabía que dirías que sí! 🎉</h1>
+        <p class="sub">¿Qué preferís?</p>
+
+        <div class="grid2">
+          <button class="pick" data-next="s3" data-plan="COMIDA" data-planDesc="Comer algo rico juntos 🍔">🍽️ COMIDA</button>
+          <button class="pick" data-next="s3" data-plan="PELÍCULA" data-planDesc="Una peli acompañados 🎬">🎬 PELÍCULA</button>
+        </div>
+      </div>
+
+      <!-- Pantalla 3 -->
+      <div class="screen" id="s3">
+        <div class="heart">❤️</div>
+        <h1>¡Perfecto! 😍</h1>
+        <p class="sub">¿Dónde preferís que sea?</p>
+
+        <div class="grid2">
+          <button class="pick" data-next="s4" data-place="AFUERA" data-placeDesc="Salgamos a disfrutar 🌇">📍 AFUERA</button>
+          <button class="pick" data-next="s4" data-place="EN CASA" data-placeDesc="Quedémonos tranqui 🏠">🏠 EN CASA</button>
+        </div>
+      </div>
+
+      <!-- Pantalla 4 -->
+      <div class="screen" id="s4">
+        <div class="hero">
+          <div class="heart big">❤️</div>
+          <h1>¡Es una cita! 💝</h1>
+        </div>
+
+        <div class="ticket">
+          <div class="ticket-row">
+            <span class="label">📅</span>
+            <span id="dateText">San Valentín</span>
+          </div>
+          <div class="ticket-row">
+            <span class="label">🕒</span>
+            <span id="timeText">15:30</span>
+          </div>
+
+          <hr />
+
+          <p class="summary" id="summaryText">
+            Tenemos una cita <b>afuera</b> a las <b>15:30</b> para <b>comer algo rico</b>.
+          </p>
+        </div>
+
+        <p class="footer" id="signatureText">Te espero mi amor ❤️</p>
+
+        <div class="row row-center">
+          <button class="btn btn-secondary" id="btnRestart">Repetir</button>
+          <button class="btn btn-yes" id="btnCopy">Copiar mensaje para WhatsApp</button>
+        </div>
+
+        <p class="small" id="copiedMsg"></p>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
