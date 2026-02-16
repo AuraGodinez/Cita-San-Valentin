@@ -3,8 +3,8 @@ alert("JS NUEVO CARGADO ✅ v3");
 // ====== Personaliza aquí ======
 const CONFIG = {
   fecha: "San Valentín 2026",   // ej: "14 de febrero 2026"
-  hora: "15:30",               // ej: "7:00 pm"
-  firma: "Te espero mi amor ❤️" // ej: "Con amor, Aura 💌"
+  hora: "00:00",               // ej: "7:00 pm"
+  firma: "Lo estare esperando Andresito❤️" // ej: "Con amor, Aura 💌"
 };
 // ==============================
 
